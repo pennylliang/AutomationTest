@@ -3,11 +3,6 @@
     <!--======================= BEGIN [The common part of all the targets in this xml file] =======================-->
     <property environment="JenkinsEnv"/>
     
-    <!-- Below is used for variable names that including other variable -->
-    <propertyhelper>
-        <props:nested/>
-    </propertyhelper>
-    
     <!-- ******************************************************************************************************* -->
     
     <!-- To check product family  -->
