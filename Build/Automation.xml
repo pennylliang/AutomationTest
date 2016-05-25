@@ -45,8 +45,8 @@
         <trycatch property="ErrorMsg">
             <try>
                 <antcall target="InitJenkinsServerJobWorkSpace"/>
-                <!-- antcallback target="GetInstaller" return="LatestBuildToRun"/>
-                <antcall target="StartVMToPrebuild"/>
+                <antcall target="CheckInstaller"/>
+                <!--antcall target="StartVMToPrebuild"/>
                 <antcall target="RunTestCasesOnVM"/>
                 <antcall target="ProcessTestCasesResults"/>
                 <antcall target="PowerOffVM"/ -->
@@ -97,61 +97,25 @@
         </if>
     </target>
 	
-    
     <!-- Check if the installer exists in the QA VM -->
-    <target name="GetInstaller">
-
-        <echo message="To check installer from file server dir: ${FileServer.${Machine}.ShareFolder.dir}"/>
-
-
-        <exec executable="cmd.exe" failonerror="false" timeout="300000"
-              outputproperty="CmdOutput" errorproperty="CmdErr"
-              resultproperty="CmdResultCode">
-            <arg line="/c GetInstaller.bat" />
-            <arg value="${FileServer.ShareFolder.MapDisk.Name}"/>
-            <arg value="${FileServer.User.Name}"/>
-            <arg value="${FileServer.User.Password}"/>
-            <arg value="${FileServer.ShareFolder.Name}"/>
-            <arg value="${FileServer.Build.Mapped.dir}"/>
-            <arg value="${Pattern.Build.folderName}"/>
-            <arg value="${Pattern.Build.installerName}"/>
-            <arg value="${Pattern.Build.finishedFileName}"/>
-            <arg value="${Pattern.Build.folderName.versionStr}"/>
-            <arg value="${Pattern.Build.installerName.versionStr}"/>
-        </exec>
-
-        <!-- Get the installer full name -->
-        <echo message="${CmdOutput}" />
-        <propertyregex property="InstallerFullName"
-                       input="${CmdOutput}"
-                       regexp="^([\s\S]*)([a-zA-Z]{1}:[^:]*)$"
-                       select="\2"
+    <target name="CheckInstaller">
+        <echo message="To check installer exists in the correct folder: ${JobWorkSpace.dir}/Staging"/>
+        <propertyregex property="installer.fullName"
+                       input="${BuildName}"
+                       regexp="^.*/(.+)$"
+                       replace="SoSSE_\1.exe"
                        casesensitive="false" />
-
-        <!-- Verify if the installer is got, if not then fail the job build -->
+        <condition property="installer.exists" else="false">
+            <available file="${JobWorkSpace.dir}/Staging/${installer.fullName}"/>
+        </condition>
         <if>
-            <not> <matches pattern="\\[^\\]+$" string="${InstallerFullName}" casesensitive="false"/> </not>
+            <equals arg1="${installer.exists}" arg2="false"> 
             <then>
-                <fail message="ERROR&#13;&#10;&#13;&#10;                                The build is not found.&#13;&#10;
-                               Please check the expression configuration of the installer or the network,&#13;&#10;
-                               maybe the password is expired or the expression is wrong!"/>
+                <fail message="Fail to find installer in folder:${JobWorkSpace.dir}/Staging/${installer.fullName}"/>
             </then>
         </if>
-
-        <!-- Save the build version to file -->
-        <echo message="" />
-        <echo message="------------------------------------------------------------------------------------------------" />
-        <echo message="AutomationLatestBuild is: ${InstallerFullName}"/>
-        <echo message="------------------------------------------------------------------------------------------------" />
-
-        <antcall target="SetBuildVersionToFile">
-            <param name="InstallerFullName" value="${InstallerFullName}" />
-        </antcall>
-
-        <property name="LatestBuildToRun" value="${InstallerFullName}" />
-
     </target>
-	
+
     
     <target name="SetBuildVersionToFile">
     
