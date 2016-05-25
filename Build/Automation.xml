@@ -109,7 +109,7 @@
             <available file="${JobWorkSpace.dir}/Staging/${installer.fullName}"/>
         </condition>
         <if>
-            <equals arg1="${installer.exists}" arg2="false"> 
+            <equals arg1="${installer.exists}" arg2="false"/> 
             <then>
                 <fail message="Fail to find installer in folder:${JobWorkSpace.dir}/Staging/${installer.fullName}"/>
             </then>
