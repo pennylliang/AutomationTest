@@ -99,7 +99,7 @@
 	
     <!-- Check if the installer exists in the QA VM -->
     <target name="CheckInstaller">
-        <echo message="To check installer exists in the correct folder: ${JobWorkSpace.dir}/Staging"/>
+        <echo message="To check installer exists in the correct folder: ${JobWorkSpace.dir}\Staging"/>
         <propertyregex property="installer.fullName"
                        input="${BuildName}"
                        regexp="^.*/(.+)$"
@@ -111,7 +111,7 @@
         <if>
             <equals arg1="${installer.exists}" arg2="false"/> 
             <then>
-                <fail message="Fail to find installer in folder:${JobWorkSpace.dir}/Staging/${installer.fullName}"/>
+                <fail message="Fail to find installer in folder:${JobWorkSpace.dir}\Staging\${installer.fullName}"/>
             </then>
         </if>
     </target>
