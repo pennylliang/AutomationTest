@@ -1,0 +1,195 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters" : {
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "auto",
+            "metadata": {
+                "description": "UserName for the Virtual Machine"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "defaultValue": "Quest123",
+            "metadata": {
+                "description": "Password for the Virtual Machine"
+            }
+        },		
+        "resourceGroup": {
+            "type": "string",
+            "defaultValue": "AutoRG",
+            "metadata": {
+                "description": "Resource Group to use"
+            }
+        },		
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "virtual network to join"
+            }
+        },
+        "virtualNetworkResourceGroup": {
+            "type": "string",
+           "metadata": {
+                "description": "Resource Group VNET is deployed in"
+			}
+        }, 		
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet Name to join"
+            }
+        },
+    },
+    "variables": {
+        "dscExtensionVersion": "2.17",
+        "domainJoinScriptLocation": "https://spotlightautomation.blob.core.windows.net/scripts/Configuration1.zip",
+        "domainjoinretryinterval": "30",
+        "domainjoinretrycount": "6",
+		"domainName": "[concat(resourceGroup().name,'.net')]",
+        "subnet1Prefix" : "10.0.0.0/16",
+		"addressPrefix":"10.0.0.0/16",
+		"publicIPName": "publicIPforTestVM",
+		"publicDnsName": "[concat(variables('testVmName'),toLower(resourceGroup().name))]",
+        "VmConfigurationFunction": "ConfigVM.ps1\\ConfigVM",
+        "testVmName": "testvm",
+        "NicNamePrefix": "[concat(variables('testVmName'),'nic')]",
+        "storageAccountType": "Standard_LRS",
+		"storageAccount": "[concat('stor',toLower(resourceGroup().name))]",
+        "testVmSize": "Standard_A1",
+        "vmStorageAccountContainerName": "vhds",
+        "vnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subnet1Ref" : "[concat(variables('vnetID'),'/subnets/',parameters('subnetName'))]",
+        "imagePublisher": "MicrosoftWindowsServer",
+        "imageOffer": "WindowsServer",
+        "OSDiskName": "osdisk"
+    },
+    "resources": [
+    {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageAccount')]",
+        "apiVersion": "2015-05-01-preview",
+        "location": "[resourceGroup().location]",
+
+        "properties": {
+            "accountType": "[variables('storageAccountType')]"
+        }
+    },
+
+
+	{
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[variables('publicIPName')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+            "publicIPAllocationMethod": "Dynamic",
+            "dnsSettings": {
+                "domainNameLabel": "[variables('publicDnsName')]"
+            }
+        }
+    },
+	
+    {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[variables('NicNamePrefix')]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+            "[concat('Microsoft.Network/publicIPAddresses/',variables('publicIPName'))]",
+        ],
+        "properties": {
+            "ipConfigurations": [
+            {
+                "name": "ipconfig1",
+                "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPName'))]"
+              },
+                "subnet": {
+                        "id": "[variables('subnet1Ref')]"
+                    }
+                }
+            }
+            ]
+        }
+    },
+    {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[variables('testVmName')]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+            "[concat('Microsoft.Network/networkInterfaces/', variables('NicNamePrefix'))]",
+            "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccount'))]"
+        ],
+        "properties": {
+            "hardwareProfile": {
+                "vmSize": "[variables('testVmSize')]"
+            },
+            "osProfile": {
+                "computername": "[variables('testVmName')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+            },
+            "storageProfile": {
+                "imageReference": {
+                    "publisher": "[variables('imagePublisher')]",
+                    "offer": "[variables('ImageOffer')]",
+                    "sku" : "2012-R2-Datacenter",
+                    "version":"latest"
+                },
+                "osDisk" : {
+                    "name" : "[variables('testVmName')]",
+                    "caching" : "ReadWrite",
+                    "createOption": "FromImage",
+                    "vhd" : {
+                         "uri": "[concat('http://',variables('storageAccount'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
+                    }
+                }
+            },
+            "networkProfile": {
+                "networkInterfaces" : [
+                {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('NicNamePrefix'))]"
+                }
+                ]
+            }
+        }
+    },
+    {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('testVmName'), '/domainjoin')]",
+        "apiVersion": "2015-05-01-preview",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', variables('testVmName'))]"
+        ],
+        "properties": {
+            "publisher": "Microsoft.Powershell",
+            "type": "DSC",
+            "typeHandlerVersion": "[variables('dscExtensionVersion')]",
+            "settings": {
+                "ModulesUrl": "[variables('domainJoinScriptLocation')]",
+                "ConfigurationFunction": "[variables('VmConfigurationFunction')]",
+                "Properties": {
+                    "DomainName": "[variables('domainName')]",
+                    "AdminCreds": {
+                        "UserName": "[parameters('adminUsername')]",
+                        "Password": "PrivateSettingsRef:adminPassword"
+                    },
+                    "RetryCount": "[variables('domainjoinretrycount')]",
+                    "RetryIntervalSec": "[variables('domainjoinretryinterval')]"
+                }
+            },
+            "protectedSettings": {
+                "Items": {
+                    "adminPassword": "[parameters('adminPassword')]"
+                }
+            }
+        }
+    }
+    ]
+}

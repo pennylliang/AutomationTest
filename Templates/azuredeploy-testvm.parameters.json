@@ -1,0 +1,27 @@
+{
+    "resourceGroup": {
+        "value": "AutoRG",
+        "description": "Resource Group to use"
+    },
+    "virtualNetworkName": {
+        "value": "autotestVNET",
+        "description": "virtual network to join"
+    },
+    "subnetName": {
+        "value": "Subnet-1",
+        "description": "Subnet Name to join"
+    },	
+    "virtualNetworkResourceGroup": {
+        "value": "AutoRG"
+    },
+    "adminUsername": {
+        "value": "sossemon",
+        "description": "UserName for the Virtual Machine(DC, DS and SQLServer)"
+    },
+    "adminPassword": {
+        "value": "Quest123",
+        "description": "Password for the Virtual Machine"
+    }
+	
+}
+
