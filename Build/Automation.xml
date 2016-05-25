@@ -120,8 +120,8 @@
         <exec dir="${JobWorkSpace.dir}\Scripts\" executable="powershell" timeout="7200000" failonerror="false" errorproperty="ErrorMessage" resultproperty="PowerShellErrorCode">
             <arg value="-File"/>
             <arg value="Deploy-TestVM.ps1"/>
-            <arg line="-ParameterFile ${JobWorkSpace.dir}\${ParameterFile}"/>
-            <arg line="-TemplateFile ${JobWorkSpace.dir}\${TemplateFile}"/>
+            <arg line="-ParameterFile '${JobWorkSpace.dir}\${ParameterFile}'"/>
+            <arg line="-TemplateFile '${JobWorkSpace.dir}\${TemplateFile}'"/>
             <arg line="-BuildId ${BuildName}"/>
         </exec>
         <if>
@@ -139,7 +139,7 @@
         <exec dir="${JobWorkSpace.dir}\Scripts\" executable="powershell" timeout="600000" failonerror="false" errorproperty="ErrorMessage" resultproperty="PowerShellErrorCode">
             <arg value="-File"/>
             <arg value="Clean-TestVM.ps1"/>
-            <arg line="-ParameterFile ${JobWorkSpace.dir}\${ParameterFile}"/>
+            <arg line="-ParameterFile '${JobWorkSpace.dir}\${ParameterFile}'"/>
             <arg line="-BuildId ${BuildName}"/>
         </exec>
         <if>
