@@ -13,6 +13,8 @@ $TenantId = "91c369b5-1c9e-439c-989c-1867ec606603"
 Login-AzureRmAccount -Credential $cred -ServicePrincipal -TenantId $TenantId
 
 ############## Check/Create Resource Group ##################
+write-host "parameter file: $ParameterFile"
+write-host "template file: $TemplateFile"
 $Params = (get-content $ParameterFile) -join "`n" | ConvertFrom-Json
 
 $ParamHashTable = @{}
