@@ -11,7 +11,7 @@ return value:
 function Login-AutomationAzure {
     $Password = "Quest123"
     $Username = "086de0c4-792c-462f-b333-818c6c5f8078"
-    $SecurePassword = ConvertTo-SecureString -string $Password -AsPlainText ¨CForce
+    $SecurePassword = ConvertTo-SecureString -string $Password -AsPlainText -Force
     $Cred = new-object System.Management.Automation.PSCredential ($Username, $SecurePassword)
     $TenantId = "91c369b5-1c9e-439c-989c-1867ec606603"
     $res = Login-AzureRmAccount -Credential $cred -ServicePrincipal -TenantId $TenantId
