@@ -138,13 +138,14 @@
 
     <!-- Remove test VM in azure -->
     <target name="CleanTestVM">
-        <exec dir="${JobWorkSpace.dir}\Scripts\" executable="powershell" timeout="600000" failonerror="false" errorproperty="ErrorMessage" resultproperty="PowerShellErrorCode">
+        <exec dir="${JobWorkSpace.dir}\Scripts\" executable="powershell" timeout="600000" failonerror="false" errorproperty="ErrorMessage" outputproperty="OutMessage" resultproperty="PowerShellErrorCode">
             <arg value="-File"/>
             <arg value="Clean-TestVM.ps1"/>
             <arg line="-ParameterFile '${JobWorkSpace.dir}\${ParameterFile}'"/>
             <arg line="-BuildId ${BuildId}"/>
         </exec>
         <echo message="${ErrorMessage}"/>
+        <echo message="${OutMessage}"/>
         <if>
             <not>
                 <equals arg1="${PowerShellErrorCode}" arg2="0"/> 

@@ -47,11 +47,10 @@ While ($Retry -lt $MaxRetryDeployVM) {
                                                  -TemplateFile $TemplateFile `
                                                  -TemplateParameterObject $ParamHashTable `
 
+        write-host($DeployCommand | Out-String)
         if ($DeployCommand.ProvisioningState -eq "Succeeded") {
             Write-Host "Deploy template successfully"
             exit 0 
-        } else {
-            write-host($DeployCommand | Out-String)
         }
     } catch {
         Write-host "Fail to deploy template"
