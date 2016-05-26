@@ -32,7 +32,7 @@ $ParamHashTable
 
 $vmName = $ParamHashTable.vmName
 $TargetRGName = $Params.resourceGroup.value
-$MaxRetryDeployVM = 3
+$MaxRetryDeployVM = 1
 $Retry = 0
 
 ##############     Deploy Test VM          ##################
