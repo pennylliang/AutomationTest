@@ -6,11 +6,13 @@
 
 . .\DeployUtilities.ps1
 
+write-host "debug1"
 $res = Login-AutomationAzure
 if($res -ne 0) {
     write-host ("Fail to login Azure.")
     exit 1 
 }
+write-host "debug2"
 
 ############## Check/Create Resource Group ##################
 write-host "parameter file: $ParameterFile"
