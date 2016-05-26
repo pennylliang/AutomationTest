@@ -66,7 +66,7 @@
         "NicNamePrefix": "[concat(parameters('vmName'),'nic')]",
         "storageAccountType": "Standard_LRS",
         "storageAccount": "[concat('stor',parameters('dnsNameForPublicIP'))]",
-        "testVmSize": "Standard_A1",
+        "testVmSize": "Standard_D1_V2",
         "vmStorageAccountContainerName": "vhds",
         "vnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "subnet1Ref" : "[concat(variables('vnetID'),'/subnets/',parameters('subnetName'))]",
