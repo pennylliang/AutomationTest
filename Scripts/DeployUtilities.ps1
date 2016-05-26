@@ -46,6 +46,9 @@ function Clean-VM {
 
     # Get VM Object
     $VM = Get-AzureRmVM -ResourceGroupName $TargetRGName -Name $VmName
+    if(!$VM) {
+       return 0
+    }
     # Get NetworkInterface name
     $NicName = $vm.NetworkProfile.NetworkInterfaces.id.split("/")[-1]
     # Get Public IP name 

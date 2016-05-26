@@ -65,7 +65,7 @@
         "VmConfigurationFunction": "ConfigVM.ps1\\ConfigVM",
         "NicNamePrefix": "[concat(parameters('vmName'),'nic')]",
         "storageAccountType": "Standard_LRS",
-        "storageAccount": "[concat('stor',toLower(resourceGroup().name))]",
+        "storageAccount": "[concat('stor',parameters('dnsNameForPublicIP'))]",
         "testVmSize": "Standard_A1",
         "vmStorageAccountContainerName": "vhds",
         "vnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
