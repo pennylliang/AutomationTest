@@ -124,6 +124,7 @@
             <arg line="-TemplateFile '${JobWorkSpace.dir}\${TemplateFile}'"/>
             <arg line="-BuildId ${BuildId}"/>
         </exec>
+        <echo message="${ErrorMessage}"/>
         <if>
             <not>
                 <equals arg1="${PowerShellErrorCode}" arg2="0"/> 
@@ -142,6 +143,7 @@
             <arg line="-ParameterFile '${JobWorkSpace.dir}\${ParameterFile}'"/>
             <arg line="-BuildId ${BuildId}"/>
         </exec>
+        <echo message="${ErrorMessage}"/>
         <if>
             <not>
                 <equals arg1="${PowerShellErrorCode}" arg2="0"/> 

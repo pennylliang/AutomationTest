@@ -4,13 +4,13 @@
     [string]$BuildId=$(throw "missing parameter -BuildId build id from jenkins")
 )
 
-##############    Begin to Login Azure     ##################
-$Password = "Quest123"
-$Username = "086de0c4-792c-462f-b333-818c6c5f8078"
-$SecurePassword = ConvertTo-SecureString -string $Password -AsPlainText –Force
-$Cred = new-object System.Management.Automation.PSCredential ($Username, $SecurePassword)
-$TenantId = "91c369b5-1c9e-439c-989c-1867ec606603"
-Login-AzureRmAccount -Credential $cred -ServicePrincipal -TenantId $TenantId
+. .\DeployUtilities.ps1
+
+$res = Login-AutomationAzure
+if($res -ne 0) {
+    write-host ("Fail to login Azure.")
+    exit 1 
+}
 
 ############## Check/Create Resource Group ##################
 write-host "parameter file: $ParameterFile"
@@ -35,7 +35,6 @@ $TargetRGName = $Params.resourceGroup.value
 $MaxRetryDeployVM = 3
 $Retry = 0
 
-
 ##############     Deploy Test VM          ##################
 While ($Retry -lt $MaxRetryDeployVM) {
     $times = $Retry + 1 
@@ -50,27 +49,23 @@ While ($Retry -lt $MaxRetryDeployVM) {
 
         if ($DeployCommand.ProvisioningState -eq "Succeeded") {
             Write-Host "Deploy template successfully"
-            break 
+            exit 0 
         } else {
             write-host($DeployCommand | Out-String)
-            throw $error[0].exception
         }
     } catch {
         Write-host "Fail to deploy template"
-        &  C:\scripts\CleanTestVM.ps1 -vmName $vmName -TargetRGName $TargetRGName 
     }
+    Clean-VM -vmName $vmName -TargetRGName $TargetRGName 
     $Retry++
 }
 
 
 if ($Retry -eq $MaxRetryDeployVM) {
     write-host ("Fail to deploy template after retry $Retry times")
-    exit 1 
+    exit 2 
 }
 
-if ($DeployCommand.ProvisioningState -eq "Succeeded") {
-    exit 0
-} else {
-    exit 2
-}
+# Unknown
+exit 3
 
