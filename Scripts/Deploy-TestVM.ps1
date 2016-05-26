@@ -8,6 +8,7 @@
 
 write-host "debug1"
 $res = Login-AutomationAzure
+write-host "debug1.1"
 if($res -ne 0) {
     write-host ("Fail to login Azure.")
     exit 1 
