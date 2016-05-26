@@ -122,7 +122,7 @@
             <arg value="Deploy-TestVM.ps1"/>
             <arg line="-ParameterFile '${JobWorkSpace.dir}\${ParameterFile}'"/>
             <arg line="-TemplateFile '${JobWorkSpace.dir}\${TemplateFile}'"/>
-            <arg line="-BuildId ${BuildName}"/>
+            <arg line="-BuildId ${BuildId}"/>
         </exec>
         <if>
             <not>
@@ -140,7 +140,7 @@
             <arg value="-File"/>
             <arg value="Clean-TestVM.ps1"/>
             <arg line="-ParameterFile '${JobWorkSpace.dir}\${ParameterFile}'"/>
-            <arg line="-BuildId ${BuildName}"/>
+            <arg line="-BuildId ${BuildId}"/>
         </exec>
         <if>
             <not>

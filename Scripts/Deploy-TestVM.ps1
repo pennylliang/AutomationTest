@@ -52,6 +52,7 @@ While ($Retry -lt $MaxRetryDeployVM) {
             Write-Host "Deploy template successfully"
             break 
         } else {
+            write-host($DeployCommand | Out-String)
             throw $error[0].exception
         }
     } catch {
