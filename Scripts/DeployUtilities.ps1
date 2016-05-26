@@ -9,6 +9,7 @@ return value:
 
 #>
 function Login-AutomationAzure {
+    write-host "Loging in Azure account..."
     $Password = "Quest123"
     $Username = "086de0c4-792c-462f-b333-818c6c5f8078"
     $SecurePassword = ConvertTo-SecureString -string $Password -AsPlainText -Force
@@ -17,9 +18,9 @@ function Login-AutomationAzure {
     $res = Login-AzureRmAccount -Credential $cred -ServicePrincipal -TenantId $TenantId
     if(!$res) {
         write-host "Auto Login fail!"
-        exit 1
+        return 1
     }
-    exit 0
+    return 0
 }
 
 <#
