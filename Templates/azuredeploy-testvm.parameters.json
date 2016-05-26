@@ -18,7 +18,7 @@
         "value": "TestVM"
     },
     "dnsNamePrefix": {
-        "value": "SpotlightTestVM"
+        "value": "spotlighttestvm"
     },
     "adminUsername": {
         "value": "sossemon",
