@@ -15,14 +15,14 @@
             "metadata": {
                 "description": "Password for the Virtual Machine"
             }
-        },		
+        },      
         "resourceGroup": {
             "type": "string",
             "defaultValue": "AutoRG",
             "metadata": {
                 "description": "Resource Group to use"
             }
-        },		
+        },      
         "virtualNetworkName": {
             "type": "string",
             "metadata": {
@@ -33,30 +33,39 @@
             "type": "string",
            "metadata": {
                 "description": "Resource Group VNET is deployed in"
-			}
-        }, 		
+            }
+        },      
         "subnetName": {
             "type": "string",
             "metadata": {
                 "description": "Subnet Name to join"
             }
         },
+        "dnsNameForPublicIP": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS name for the test vm public IP"
+            }
+        },
+        "vmName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the test vm"
+            }
+        }
     },
     "variables": {
         "dscExtensionVersion": "2.17",
         "domainJoinScriptLocation": "https://spotlightautomation.blob.core.windows.net/scripts/Configuration1.zip",
         "domainjoinretryinterval": "30",
         "domainjoinretrycount": "6",
-		"domainName": "[concat(resourceGroup().name,'.net')]",
+        "domainName": "[concat(resourceGroup().name,'.net')]",
         "subnet1Prefix" : "10.0.0.0/16",
-		"addressPrefix":"10.0.0.0/16",
-		"publicIPName": "publicIPforTestVM",
-		"publicDnsName": "[concat(variables('testVmName'),toLower(resourceGroup().name))]",
+        "addressPrefix":"10.0.0.0/16",
         "VmConfigurationFunction": "ConfigVM.ps1\\ConfigVM",
-        "testVmName": "testvm",
-        "NicNamePrefix": "[concat(variables('testVmName'),'nic')]",
+        "NicNamePrefix": "[concat(parameters('vmName'),'nic')]",
         "storageAccountType": "Standard_LRS",
-		"storageAccount": "[concat('stor',toLower(resourceGroup().name))]",
+        "storageAccount": "[concat('stor',toLower(resourceGroup().name))]",
         "testVmSize": "Standard_A1",
         "vmStorageAccountContainerName": "vhds",
         "vnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
@@ -78,26 +87,26 @@
     },
 
 
-	{
+    {
         "apiVersion": "2015-05-01-preview",
         "type": "Microsoft.Network/publicIPAddresses",
-        "name": "[variables('publicIPName')]",
+        "name": "[parameters('dnsNameForPublicIP')]",
         "location": "[resourceGroup().location]",
         "properties": {
             "publicIPAllocationMethod": "Dynamic",
             "dnsSettings": {
-                "domainNameLabel": "[variables('publicDnsName')]"
+                "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
             }
         }
     },
-	
+    
     {
         "apiVersion": "2015-05-01-preview",
         "type": "Microsoft.Network/networkInterfaces",
         "name": "[variables('NicNamePrefix')]",
         "location": "[resourceGroup().location]",
         "dependsOn": [
-            "[concat('Microsoft.Network/publicIPAddresses/',variables('publicIPName'))]",
+            "[concat('Microsoft.Network/publicIPAddresses/',parameters('dnsNameForPublicIP'))]",
         ],
         "properties": {
             "ipConfigurations": [
@@ -106,7 +115,7 @@
                 "properties": {
                     "privateIPAllocationMethod": "Dynamic",
                 "publicIPAddress": {
-                    "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPName'))]"
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('dnsNameForPublicIP'))]"
               },
                 "subnet": {
                         "id": "[variables('subnet1Ref')]"
@@ -119,7 +128,7 @@
     {
         "apiVersion": "2015-05-01-preview",
         "type": "Microsoft.Compute/virtualMachines",
-        "name": "[variables('testVmName')]",
+        "name": "[parameters('vmName')]",
         "location": "[resourceGroup().location]",
         "dependsOn": [
             "[concat('Microsoft.Network/networkInterfaces/', variables('NicNamePrefix'))]",
@@ -130,7 +139,7 @@
                 "vmSize": "[variables('testVmSize')]"
             },
             "osProfile": {
-                "computername": "[variables('testVmName')]",
+                "computername": "[parameters('vmName')]",
                 "adminUsername": "[parameters('adminUsername')]",
                 "adminPassword": "[parameters('adminPassword')]"
             },
@@ -142,7 +151,7 @@
                     "version":"latest"
                 },
                 "osDisk" : {
-                    "name" : "[variables('testVmName')]",
+                    "name" : "[parameters('vmName')]",
                     "caching" : "ReadWrite",
                     "createOption": "FromImage",
                     "vhd" : {
@@ -161,11 +170,11 @@
     },
     {
         "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(variables('testVmName'), '/domainjoin')]",
+        "name": "[concat(parameters('vmName'), '/domainjoin')]",
         "apiVersion": "2015-05-01-preview",
         "location": "[resourceGroup().location]",
         "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', variables('testVmName'))]"
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
         ],
         "properties": {
             "publisher": "Microsoft.Powershell",

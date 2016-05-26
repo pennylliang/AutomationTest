@@ -14,8 +14,11 @@
     "virtualNetworkResourceGroup": {
         "value": "AutoRG"
     },
-    "vmName": {
+    "vmNamePrefix": {
         "value": "TestVM"
+    },
+    "dnsNamePrefix": {
+        "value": "SpotlightTestVM"
     },
     "adminUsername": {
         "value": "sossemon",

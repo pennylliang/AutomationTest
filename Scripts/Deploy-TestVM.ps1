@@ -21,10 +21,10 @@ $ParamHashTable = @{}
 
 $ParamHashTable.adminUsername = $Params.adminUsername.value
 $ParamHashTable.adminPassword = $Params.adminPassword.value
-$ParamHashTable.dnsNameForPublicIP = $Params.dnsNameForPublicIP.value + $BuildId 
+$ParamHashTable.dnsNameForPublicIP = $Params.dnsNamePrefix.value + $BuildId 
 $ParamHashTable.virtualNetworkName = $Params.virtualNetworkName.value
 $ParamHashTable.subnetName = $Params.subnetName.value
-$ParamHashTable.vmName = $Params.vmName.value + $BuildId 
+$ParamHashTable.vmName = $Params.vmNamePrefix.value + $BuildId 
 $ParamHashTable.virtualNetworkResourceGroup = $Params.virtualNetworkResourceGroup.value 
 
 write-host "Parameter Hash Table:"
