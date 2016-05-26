@@ -11,5 +11,9 @@ if($res -ne 0) {
     exit 1 
 }
 
-Clean-VM -vmName $vmName -TargetRGName $TargetRGName
+$Params = (get-content $ParameterFile) -join "`n" | ConvertFrom-Json
+$VmName = $Params.vmName.value + $BuildId
+$TargetRGName = $Params.resourceGroup.value
+
+Clean-VM -vmName $VmName -TargetRGName $TargetRGName
 
