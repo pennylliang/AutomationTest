@@ -102,7 +102,7 @@
         <propertyregex property="installer.fullName"
                        input="${BuildName}"
                        regexp="^.*/(.+)$"
-                       replace="SoSSE_\1.exe"
+                       select="SoSSE_\1.exe"
                        casesensitive="false" />
         <condition property="installer.exists" else="false">
             <available file="${JobWorkSpace.dir}/Staging/${installer.fullName}"/>
@@ -134,6 +134,23 @@
                 <fail message="Fail to deploy ARM template: ${JobWorkSpace.dir}\${TemplateFile}"/>
             </then>
         </if>
+        <!-- deploy script should display the vmName in output.
+             looks like:
+             Name                           Value                                           
+             virtualNetworkName             autotestVNET                                    
+             dnsNameForPublicIP             spotlighttestvm35                               
+             virtualNetworkResourceGroup    AutoRG                                          
+             adminUsername                  sossemon                                        
+             vmName                         TestVM35                                        
+             adminPassword                  Quest123                                        
+             subnetName                     Subnet-1 
+             -->
+        <propertyregex property="TestVMFQDN"
+          input="${OutMessage}"
+          regexp="vmName\s*(\w+)"
+          select="\1.westus.cloudapp.azure.com"
+          casesensitive="false" />
+        <echo message="DNS name of testvm: ${TestVMFQDN}"/>
     </target>
 
     <!-- Remove test VM in azure -->

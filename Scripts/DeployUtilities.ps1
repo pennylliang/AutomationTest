@@ -44,6 +44,7 @@ VM name
 function Clean-VM {
     param([String]$TargetRGName, [String]$VmName)
 
+    Write-Host "Going to remove $VmName from $TargetRGName"
     # Get VM Object
     $VM = Get-AzureRmVM -ResourceGroupName $TargetRGName -Name $VmName
     if(!$VM) {
