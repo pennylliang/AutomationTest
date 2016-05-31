@@ -45,6 +45,7 @@
                 <antcall target="InitJenkinsServerJobWorkSpace"/>
                 <antcall target="CheckInstaller"/>
                 <antcall target="DeployTestVM"/>
+                <antcall target="CopyFilesToTestVM"/>
                 <!--antcall target="CleanTestVM"/>
                 <antcall target="RunTestCasesOnVM"/>
                 <antcall target="ProcessTestCasesResults"/>
@@ -144,6 +145,7 @@
              vmName                         TestVM35                                        
              adminPassword                  Quest123                                        
              subnetName                     Subnet-1 
+             domainName                     AutoRG                                          
              -->
         <propertyregex property="TestVMFQDN"
           input="${OutMessage}"
@@ -151,6 +153,24 @@
           select="\1.westus.cloudapp.azure.com"
           casesensitive="false" />
         <echo message="DNS name of testvm: ${TestVMFQDN}"/>
+        <propertyregex property="TestVMUser"
+          input="${OutMessage}"
+          regexp="adminUsername\s*(\w+)"
+          select="\1"
+          casesensitive="false" />
+        <echo message="DNS name of testvm: ${TestVMFQDN}"/>
+        <propertyregex property="TestVMPassword"
+          input="${OutMessage}"
+          regexp="adminPassword\s*(\w+)"
+          select="\1"
+          casesensitive="false" />
+        <propertyregex property="TestVMDomain"
+          input="${OutMessage}"
+          regexp="domainName\s*(\w+)"
+          select="\1"
+          casesensitive="false" />
+
+        <echo message="DNS name of testvm: ${TestVMFQDN}; domain: ${TestVMDomain}; user: ${TestVMUser}; password ${TestVMPassword}"/>
     </target>
 
     <!-- Remove test VM in azure -->
@@ -172,6 +192,28 @@
             </then>
         </if>
     </target>
+
+    <!-- Copy installer and test material to Test VM -->
+    <target name="CopyFilesToTestVM">
+        <exec dir="${JobWorkSpace.dir}\Scripts\" executable="powershell" timeout="600000" failonerror="false" errorproperty="ErrorMessage" outputproperty="OutMessage" resultproperty="PowerShellErrorCode">
+            <arg value="-File"/>
+            <arg value="Copy-RemoteFiles.ps1"/>
+            <arg line="-Source '${JobWorkSpace.dir}\Staging'"/>
+            <arg line="-Destination '\\${TestVMFQDN}\c$'"/>
+            <arg line="-Username '${TestVMDomain}\${TestUser}'"/>
+            <arg line="-Password '${TestVMPassword}'"/>
+        </exec>
+        <echo message="${ErrorMessage}"/>
+        <echo message="${OutMessage}"/>
+        <if>
+            <not>
+                <equals arg1="${PowerShellErrorCode}" arg2="0"/> 
+            </not>
+            <then>
+                <fail message="Fail to copy files to test vm"/>
+            </then>
+        </if>
+    </target>   
 	
     <target name="RunTestCasesOnVM">
     

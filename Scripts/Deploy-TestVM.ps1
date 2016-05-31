@@ -26,6 +26,7 @@ $ParamHashTable.virtualNetworkName = $Params.virtualNetworkName.value
 $ParamHashTable.subnetName = $Params.subnetName.value
 $ParamHashTable.vmName = $Params.vmNamePrefix.value + $BuildId 
 $ParamHashTable.virtualNetworkResourceGroup = $Params.virtualNetworkResourceGroup.value 
+$ParamHashTable.domainName = $Params.domainName.value 
 
 write-host "Parameter Hash Table:"
 $ParamHashTable

@@ -27,7 +27,9 @@
     "adminPassword": {
         "value": "Quest123",
         "description": "Password for the Virtual Machine"
+    },
+    "domainName": {
+        "value": "AutoRG"
     }
-	
 }
 

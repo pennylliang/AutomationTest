@@ -52,6 +52,12 @@
             "metadata": {
                 "description": "Name of the test vm"
             }
+        },
+        "domainName": {
+            "type": "string",
+            "metadata": {
+                "description": "domainName"
+            }
         }
     },
     "variables": {
@@ -59,7 +65,7 @@
         "domainJoinScriptLocation": "https://spotlightautomation.blob.core.windows.net/scripts/Configuration1.zip",
         "domainjoinretryinterval": "30",
         "domainjoinretrycount": "6",
-        "domainName": "[concat(resourceGroup().name,'.net')]",
+        "fullDomainName": "[concat(parameters('domainName'),'.net')]",
         "subnet1Prefix" : "10.0.0.0/16",
         "addressPrefix":"10.0.0.0/16",
         "VmConfigurationFunction": "ConfigVM.ps1\\ConfigVM",
@@ -184,7 +190,7 @@
                 "ModulesUrl": "[variables('domainJoinScriptLocation')]",
                 "ConfigurationFunction": "[variables('VmConfigurationFunction')]",
                 "Properties": {
-                    "DomainName": "[variables('domainName')]",
+                    "DomainName": "[variables('fullDomainName')]",
                     "AdminCreds": {
                         "UserName": "[parameters('adminUsername')]",
                         "Password": "PrivateSettingsRef:adminPassword"
