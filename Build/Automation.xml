@@ -31,7 +31,6 @@
                 <antcall target="InitJenkinsServerJobWorkSpace"/>
                 <antcall target="CheckInstaller"/>
                 <antcallback target="DeployTestVM" return="TestVMFQDN,TestVMUser,TestVMPassword,TestVMDomain"/>
-                <echo message="DNS name of testvm: ${TestVMFQDN}; domain: ${TestVMDomain}; user: ${TestVMUser}; password ${TestVMPassword}"/>
                 <antcall target="CopyFilesToTestVM">
                    <param name="Source" value="${JobWorkSpace.dir}\Staging"/>
                    <param name="Destination" value="\\${TestVMFQDN}\c$"/>

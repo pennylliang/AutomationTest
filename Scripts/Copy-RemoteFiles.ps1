@@ -7,7 +7,7 @@ param(
 
 $MaxRetry = 3
 
-write-host "$Source    $Destination     $Username    $Password"
+write-host "Parameters: Source:$Source    Destination:$Destination    Username:$Username    Password:$Password"
 # Get the remote address from $Source or $Destination
 if($Source -like "\\*") {
     $Address = $Source
