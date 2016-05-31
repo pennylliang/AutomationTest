@@ -35,7 +35,7 @@
                 <antcall target="CopyFilesToTestVM">
                    <param name="Source" value="${JobWorkSpace.dir}\Staging"/>
                    <param name="Destination" value="\\${TestVMFQDN}\c$"/>
-                   <param name="User" value="${TestVMDomain}\${TestUser}"/>
+                   <param name="User" value="${TestVMDomain}\${TestVMUser}"/>
                    <param name="Password" value="${TestVMPassword}"/>
                 </antcall>
                 <!--antcall target="CleanTestVM"/>
