@@ -150,7 +150,7 @@
         <propertyregex property="TestVMFQDN"
           input="${OutMessage}"
           regexp="vmName\s*(\w+)"
-          select="\1.westus.cloudapp.azure.com"
+          select="spotlighttestvm42.westus.cloudapp.azure.com"
           casesensitive="false" />
         <echo message="DNS name of testvm: ${TestVMFQDN}"/>
         <propertyregex property="TestVMUser"
