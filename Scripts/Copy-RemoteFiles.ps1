@@ -33,7 +33,7 @@ if(!$Res) {
 
 $Retry = 0
 while ($Retry -lt $MaxRetry) {
-    Copy-Item "$Source" -Destination "$Destination" 
+    Copy-Item "$Source" -Destination "$Destination" -recurse
     if($? -eq $true) {
         break
     }
