@@ -41,12 +41,6 @@
                 "description": "Subnet Name to join"
             }
         },
-        "dnsNameForPublicIP": {
-            "type": "string",
-            "metadata": {
-                "description": "DNS name for the test vm public IP"
-            }
-        },
         "vmName": {
             "type": "string",
             "metadata": {
@@ -71,7 +65,7 @@
         "VmConfigurationFunction": "ConfigVM.ps1\\ConfigVM",
         "NicNamePrefix": "[concat(parameters('vmName'),'nic')]",
         "storageAccountType": "Standard_LRS",
-        "storageAccount": "[concat('stor',parameters('dnsNameForPublicIP'))]",
+        "storageAccount": "[concat('stor',parameters('vmName'))]",
         "testVmSize": "Standard_D1_V2",
         "vmStorageAccountContainerName": "vhds",
         "vnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
@@ -96,12 +90,12 @@
     {
         "apiVersion": "2015-05-01-preview",
         "type": "Microsoft.Network/publicIPAddresses",
-        "name": "[parameters('dnsNameForPublicIP')]",
+        "name": "[parameters('vmName')]",
         "location": "[resourceGroup().location]",
         "properties": {
             "publicIPAllocationMethod": "Dynamic",
             "dnsSettings": {
-                "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
+                "domainNameLabel": "[parameters('vmName')]"
             }
         }
     },
@@ -112,7 +106,7 @@
         "name": "[variables('NicNamePrefix')]",
         "location": "[resourceGroup().location]",
         "dependsOn": [
-            "[concat('Microsoft.Network/publicIPAddresses/',parameters('dnsNameForPublicIP'))]",
+            "[concat('Microsoft.Network/publicIPAddresses/',parameters('vmName'))]",
         ],
         "properties": {
             "ipConfigurations": [
@@ -121,7 +115,7 @@
                 "properties": {
                     "privateIPAllocationMethod": "Dynamic",
                 "publicIPAddress": {
-                    "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('dnsNameForPublicIP'))]"
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('vmName'))]"
               },
                 "subnet": {
                         "id": "[variables('subnet1Ref')]"

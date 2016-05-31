@@ -15,10 +15,7 @@
         "value": "AutoRG"
     },
     "vmNamePrefix": {
-        "value": "TestVM"
-    },
-    "dnsNamePrefix": {
-        "value": "spotlighttestvm"
+        "value": "SPLTestVM"
     },
     "adminUsername": {
         "value": "sossemon",

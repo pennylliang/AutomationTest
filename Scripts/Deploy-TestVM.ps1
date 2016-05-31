@@ -21,7 +21,6 @@ $ParamHashTable = @{}
 
 $ParamHashTable.adminUsername = $Params.adminUsername.value
 $ParamHashTable.adminPassword = $Params.adminPassword.value
-$ParamHashTable.dnsNameForPublicIP = $Params.dnsNamePrefix.value + $BuildId 
 $ParamHashTable.virtualNetworkName = $Params.virtualNetworkName.value
 $ParamHashTable.subnetName = $Params.subnetName.value
 $ParamHashTable.vmName = $Params.vmNamePrefix.value + $BuildId 
