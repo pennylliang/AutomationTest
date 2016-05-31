@@ -16,20 +16,6 @@
     </propertyhelper>
     
     <!-- ******************************************************************************************************* -->
-    
-    <!-- To check product family  -->
-    <condition property="Product.SoSSE">
-        <matches pattern="SoSSE" string="${ProductName}" casesensitive="false"/>
-    </condition>
-    
-    <if>
-        <equals arg1="${Product.SoSSE}" arg2="true"/>
-        <then>
-            <property name="ProductFamily" value="SoSSE"/>
-        </then>
-    </if>
-    
-    <property file="./Build_${ProductFamily}.Properties"/>
     <property environment="JenkinsEnv"/>
     <!-- <echo message="${JenkinsEnv.JENKINS_URL}"/> -->
     
@@ -152,13 +138,11 @@
           regexp="vmName\s*(\w+)"
           select="spotlighttestvm42.westus.cloudapp.azure.com"
           casesensitive="false" />
-        <echo message="DNS name of testvm: ${TestVMFQDN}"/>
         <propertyregex property="TestVMUser"
           input="${OutMessage}"
           regexp="adminUsername\s*(\w+)"
           select="\1"
           casesensitive="false" />
-        <echo message="DNS name of testvm: ${TestVMFQDN}"/>
         <propertyregex property="TestVMPassword"
           input="${OutMessage}"
           regexp="adminPassword\s*(\w+)"

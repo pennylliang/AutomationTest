@@ -20,11 +20,11 @@ if($Source -like "\\*") {
 # incase the path is a file, "net use" only accept folder path
 # like: \\spotlighttestvm42.westus.cloudapp.azure.com\c$
 $Res = net use "$Address" $Password /USER:$Username
-if($Res -notlike "*successfully*") {
+if(!$Res) {
     $Pos = $Address.lastindexof("\")
     $Address = $Address.substring(0,$Pos)
     $Res = net use $Address $Password /USER:$Username
-    if($Res -notlike "*successfully*") {
+    if(!$Res) {
         write-host "Fail to setup network connection to $Address"
         return 2
     }
@@ -32,7 +32,7 @@ if($Res -notlike "*successfully*") {
 
 $Retry = 0
 while ($Retry -lt $MaxRetry) {
-    Copy-Item $Source -Destination $Destination 
+    Copy-Item "$Source" -Destination "$Destination" 
     if($? -eq $true) {
         break
     }
