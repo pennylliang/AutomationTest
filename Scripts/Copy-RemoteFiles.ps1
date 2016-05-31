@@ -14,7 +14,7 @@ if($Source -like "\\*") {
     $Address = $Destination
 } else {
     write-host "It's not a remote copy. Source: $Source; Destination: $Destination"
-    return 1
+    exit 1
 }
 
 # incase the path is a file, "net use" only accept folder path
@@ -26,7 +26,7 @@ if(!$Res) {
     $Res = net use $Address $Password /USER:$Username
     if(!$Res) {
         write-host "Fail to setup network connection to $Address"
-        return 2
+        exit 2
     }
 }
 
@@ -44,7 +44,7 @@ net use $Address /delete
 
 if($Retry -eq $MaxRetry) {
     write-host "Fail to copy file after retry $Retry times"
-    return 3
+    exit 3
 }
 
-return 0
+exit 0
