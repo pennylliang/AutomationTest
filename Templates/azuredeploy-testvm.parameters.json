@@ -15,7 +15,7 @@
         "value": "AutoRG"
     },
     "vmNamePrefix": {
-        "value": "SPLTestVM"
+        "value": "spltestvm"
     },
     "adminUsername": {
         "value": "sossemon",
