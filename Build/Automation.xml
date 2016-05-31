@@ -45,8 +45,8 @@
                 <antcall target="InitJenkinsServerJobWorkSpace"/>
                 <antcall target="CheckInstaller"/>
                 <antcall target="DeployTestVM"/>
-                <antcall target="CleanTestVM"/>
-                <!--antcall target="RunTestCasesOnVM"/>
+                <!--antcall target="CleanTestVM"/>
+                <antcall target="RunTestCasesOnVM"/>
                 <antcall target="ProcessTestCasesResults"/>
                 <antcall target="PowerOffVM"/ -->
             </try>
