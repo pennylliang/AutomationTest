@@ -31,6 +31,7 @@ if(!$Res) {
     }
 }
 
+# re-try copy several times incase meeting network issue
 $Retry = 0
 while ($Retry -lt $MaxRetry) {
     Copy-Item "$Source" -Destination "$Destination" -recurse -force

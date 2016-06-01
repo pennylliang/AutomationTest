@@ -28,15 +28,15 @@
     
         <trycatch property="ErrorMsg">
             <try>
-                <antcall target="InitJenkinsServerJobWorkSpace"/>
-                <antcall target="CheckInstaller"/>
+                <!--antcall target="InitJenkinsServerJobWorkSpace"/>
+                <antcall target="CheckInstaller"/-->
                 <antcallback target="DeployTestVM" return="TestVMFQDN,TestVMUser,TestVMPassword,TestVMDomain"/>
-                <antcall target="CopyFilesToTestVM">
+                <!--antcall target="CopyFilesToTestVM">
                    <param name="Source" value="${JobWorkSpace.dir}\Staging"/>
                    <param name="Destination" value="\\${TestVMFQDN}\c$"/>
                    <param name="User" value="${TestVMDomain}\${TestVMUser}"/>
                    <param name="Password" value="${TestVMPassword}"/>
-                </antcall>
+                </antcall-->
                 <antcall target="CleanTestVM"/>
                 <!--antcall target="RunTestCasesOnVM"/>
                 <antcall target="ProcessTestCasesResults"/>
