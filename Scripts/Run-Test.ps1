@@ -24,10 +24,10 @@ if(!$wfs) {
 # If the job uses Write-Host to produce output, Receive-Job returns $null,
 # but the results get written to the host. However, if the job uses Write-Output
 # to produce output in lieu of Write-Host, Receive-Job returns a string 
-# array [string[]] of the job output. so use write-out in the remote Job
+# array [string[]] of the job output. so use write-output in the remote Job
 $TestJob = Invoke-Command -AsJob -JobName "AutoTest" -Session $wfs  -ScriptBlock {
     param ($Cmd)
-    write-out "----$Cmd----"
+    write-Output "----$Cmd----"
     Start-Sleep -s 60
 } -ArgumentList $Command
 
