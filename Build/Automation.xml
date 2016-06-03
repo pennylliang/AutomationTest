@@ -37,10 +37,13 @@
                    <param name="User" value="${TestVMDomain}\${TestVMUser}"/>
                    <param name="Password" value="${TestVMPassword}"/>
                 </antcall>
+                <antcall target="RunTestCasesOnVM1">
+                   <param name="Computer" value="${TestVMFQDN}"/>
+                   <param name="User" value="${TestVMDomain}\${TestVMUser}"/>
+                   <param name="Password" value="${TestVMPassword}"/>
+                </antcall>
                 <antcall target="CleanTestVM"/>
-                <!--antcall target="RunTestCasesOnVM"/>
-                <antcall target="ProcessTestCasesResults"/>
-                <antcall target="PowerOffVM"/ -->
+                <!--antcall target="ProcessTestCasesResults"/-->
             </try>
             <catch>
                 <echo> ERROR happened: &lt;${ErrorMsg}&gt; </echo>
@@ -128,15 +131,15 @@
         </if>
         <!-- deploy script should display the vmName in output.
              looks like:
-             Name                           Value                                           
-             virtualNetworkName             autotestVNET                                    
-             dnsNameForPublicIP             spotlighttestvm35                               
-             virtualNetworkResourceGroup    AutoRG                                          
-             adminUsername                  sossemon                                        
-             vmName                         TestVM35                                        
-             adminPassword                  Quest123                                        
-             subnetName                     Subnet-1 
-             domainName                     AutoRG                                          
+             Name                           Value
+             virtualNetworkName             autotestVNET
+             dnsNameForPublicIP             spotlighttestvm35
+             virtualNetworkResourceGroup    AutoRG
+             adminUsername                  sossemon
+             vmName                         TestVM35
+             adminPassword                  Quest123
+             subnetName                     Subnet-1
+             domainName                     AutoRG
              -->
         <propertyregex property="TestVMFQDN"
           input="${OutMessage}"
@@ -204,6 +207,29 @@
         </if>
     </target>   
 	
+    <target name="RunTestCasesOnVM1">
+        <exec dir="${JobWorkSpace.dir}\Scripts\" executable="powershell" timeout="7200000" failonerror="false" errorproperty="ErrorMessage" outputproperty="OutMessage" resultproperty="PowerShellErrorCode">
+            <arg value="-File"/>
+            <arg value="Run-Test.ps1"/>
+            <arg line="-Computer '${Computer}'"/>
+            <arg line="-Username '${User}'"/>
+            <arg line="-Password '${Password}'"/>
+            <arg line="-Command 'hello world'"/>
+        </exec>
+        <echo message="${ErrorMessage}"/>
+        <echo message="${OutMessage}"/>
+        <if>
+            <not>
+                <equals arg1="${PowerShellErrorCode}" arg2="0"/> 
+            </not>
+            <then>
+                <fail message="Fail to run test"/>
+            </then>
+        </if>
+
+    </target>
+
+
     <target name="RunTestCasesOnVM">
     
         <echo message="-----------------Error code information--------------------------"/>
