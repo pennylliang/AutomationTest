@@ -32,7 +32,7 @@
                 <antcall target="CheckInstaller"/>
                 <antcallback target="DeployTestVM" return="TestVMFQDN,TestVMUser,TestVMPassword,TestVMDomain"/>
                 <antcall target="CopyFilesToTestVM">
-                   <param name="Source" value="${JobWorkSpace.dir}\Staging"/>
+                   <param name="Source" value="${JobWorkSpace.dir}\Code"/>
                    <param name="Destination" value="\\${TestVMFQDN}\c$"/>
                    <param name="User" value="${TestVMDomain}\${TestVMUser}"/>
                    <param name="Password" value="${TestVMPassword}"/>
@@ -93,19 +93,19 @@
 	
     <!-- Check if the installer exists in the QA VM -->
     <target name="CheckInstaller">
-        <echo message="Check if installer exists in folder: ${JobWorkSpace.dir}\Staging"/>
+        <echo message="Check if installer exists in folder: ${JobWorkSpace.dir}\Code"/>
         <propertyregex property="installer.fullName"
                        input="${BuildName}"
                        regexp="^.*/(.+)$"
                        select="SoSSE_\1.exe"
                        casesensitive="false" />
         <condition property="installer.exists" else="false">
-            <available file="${JobWorkSpace.dir}/Staging/${installer.fullName}"/>
+            <available file="${JobWorkSpace.dir}/Code/Installer/${installer.fullName}"/>
         </condition>
         <if>
             <equals arg1="${installer.exists}" arg2="false"/> 
             <then>
-                <fail message="Fail to find installer in folder:${JobWorkSpace.dir}\Staging\${installer.fullName}"/>
+                <fail message="Fail to find installer in folder:${JobWorkSpace.dir}\Code\Installer\${installer.fullName}"/>
             </then>
         </if>
     </target>
