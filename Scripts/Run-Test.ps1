@@ -5,6 +5,7 @@ param(
     [string]$Command
 )
 
+write-host "Connecting to $Computer as $Username, run command $Command"
 $Secpass = ConvertTo-secureString $Password -asPlainText -Force
 $Cred = New-Object System.Management.Automation.PSCredential ($Username,$Secpass)
 $wfs = New-PSSession -ComputerName $Computer -Credential $Cred
