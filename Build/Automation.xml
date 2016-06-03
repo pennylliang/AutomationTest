@@ -16,6 +16,7 @@
     </propertyhelper>
     
     <!-- ******************************************************************************************************* -->
+    <property file="./Build.Properties"/>
     <property environment="JenkinsEnv"/>
     <!-- <echo message="${JenkinsEnv.JENKINS_URL}"/> -->
     
