@@ -30,7 +30,7 @@
         <trycatch property="ErrorMsg">
             <try>
                 <antcall target="InitJenkinsServerJobWorkSpace"/>
-                <antcall target="CheckInstaller"/>
+                <!--antcall target="CheckInstaller"/-->
                 <antcallback target="DeployTestVM" return="TestVMFQDN,TestVMUser,TestVMPassword,TestVMDomain"/>
                 <antcall target="CopyFilesToTestVM">
                    <param name="Source" value="${JobWorkSpace.dir}\Code"/>
